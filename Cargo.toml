@@ -6,3 +6,11 @@ edition = "2021"
 [dependencies]
 
 [workspace]
+
+[profile.dev]
+panic = "abort"
+debug = true
+
+[profile.release]
+panic = "abort"
+debug = true
