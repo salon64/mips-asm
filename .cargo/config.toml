@@ -1,0 +1,8 @@
+[target.mips]
+rustflags = ["-C", "link-arg=-Tmemory.x"]
+
+[build]
+target = "mips.json"
+
+[unstable]
+build-std = ["core"]
