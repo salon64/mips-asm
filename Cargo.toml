@@ -1,5 +1,5 @@
 [package]
-name = "riscv_asm"
+name = "mips_asm"
 version = "0.1.0"
 edition = "2021"
 
