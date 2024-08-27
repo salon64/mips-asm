@@ -8,10 +8,13 @@ fn panic(_info: &PanicInfo) -> ! {
     loop {}
 }
 
+static mut VAR: u32 = 4;
+
+#[link_section = ".text"]
 #[no_mangle]
 fn main() {
-    let mut a = 0;
+    let mut ptr = unsafe { &mut VAR as *mut _ as *mut u32 };
     loop {
-        a += 1;
+        unsafe { core::ptr::write_volatile(ptr, VAR + 1) };
     }
 }

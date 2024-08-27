@@ -5,15 +5,14 @@ SECTIONS
   {
     KEEP(*(.text)); 
   }
-  . = 0x50000000;
+  . = 0x1000;
   .data :
   {
     KEEP(*(.data));  
   }
-  . = 0x50000100;
-  .vector_table : 
-  {
-    KEEP(*(.vector_table));  
+  /DISCARD/ : {
+   *(.MIPS.abiflags)
+   *(.reginfo)
   }
 }
-PROVIDE(_stack_start = 0x50002000);
+PROVIDE(_stack_start = 0x80000000);
