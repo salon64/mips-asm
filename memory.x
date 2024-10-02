@@ -6,6 +6,10 @@ SECTIONS
     KEEP(*(.text)); 
   }
   . = 0x1000;
+  .rodata : {
+    *(.srodata .srodata.*);
+    *(.rodata .rodata.*);
+  }
   .data :
   {
     KEEP(*(.data));  
