@@ -9,8 +9,10 @@ edition = "2021"
 
 [profile.dev]
 panic = "abort"
-debug = true
+debug = false
+opt-level = 1
 
 [profile.release]
 panic = "abort"
-debug = true
+debug = false
+opt-level = 1

@@ -5,7 +5,7 @@ SECTIONS
   {
     KEEP(*(.text)); 
   }
-  . = 0x1000;
+  . = ALIGN(4);
   .rodata : {
     *(.srodata .srodata.*);
     *(.rodata .rodata.*);
@@ -17,6 +17,9 @@ SECTIONS
   /DISCARD/ : {
    *(.MIPS.abiflags)
    *(.reginfo)
+   *(.comment)
+   *(.pdr)
+   *(.mdebug.abi32)
   }
 }
 PROVIDE(_stack_start = 0x80000000);
