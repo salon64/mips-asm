@@ -1,10 +1,10 @@
 {
   "arch": "mips",
-  "cpu": "mips32r2",
+  "cpu": "mips1",
   "crt-objects-fallback": "false",
   "data-layout": "E-m:m-p:32:32-i8:8:32-i16:16:32-i64:64-n32-S64",
   "emit-debug-gdb-scripts": false,
-  "features": "+mips32r2,+noabicalls",
+  "features": "+soft-float",
   "is-builtin": false,
   "linker": "rust-lld",
   "linker-flavor": "gnu-lld",
