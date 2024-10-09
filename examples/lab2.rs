@@ -9,7 +9,7 @@ fn panic(_info: &PanicInfo) -> ! {
 }
 
 #[allow(dead_code)]
-#[link_section = ".data"]
+#[link_section = ".output"]
 static mut PLAIN: [u8; 132] = [0; 132];
 
 #[link_section = ".data"]
@@ -29,10 +29,14 @@ static CODED: [u32; 86] = [
 
 #[no_mangle]
 pub extern "C" fn memset(s: *mut u8, c: u8, n: usize) -> *mut u8 {
-    let ptr = s as *const _ as *mut u8;
-    let slice = unsafe { core::slice::from_raw_parts_mut(ptr, n) };
-    slice.fill(c);
-    slice as *const _ as *mut u8
+    let mut i = 0;
+    while i < n {
+        unsafe {
+            *s.add(i) = c;
+        }
+        i += 1;
+    }
+    s
 }
 
 #[link_section = ".text"]

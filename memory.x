@@ -14,6 +14,11 @@ SECTIONS
   {
     KEEP(*(.data));  
   }
+  . = ALIGN(4);
+  .output : 
+  {
+    KEEP(*(.output));
+  }
   /DISCARD/ : {
    *(.MIPS.abiflags)
    *(.reginfo)
