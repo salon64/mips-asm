@@ -8,11 +8,13 @@ fn panic(_info: &PanicInfo) -> ! {
     loop {}
 }
 
+// Section for the decoded output
 #[used]
 #[allow(dead_code)]
 #[link_section = ".data"]
 static mut PLAIN: [u8; 132] = [0; 132];
 
+// Static coded data
 #[link_section = ".data"]
 static CODED: [u32; 86] = [
     0x57aa578d, 0x5bea35dc, 0xfaad75f4, 0x97be0436, 0xc85bc050, 0x03470e2b, 0x2d4db7ff, 0xcd1ec180,
@@ -28,6 +30,7 @@ static CODED: [u32; 86] = [
     0x07209c2f, 0x95bdf638, 0x11ddbeef, 0xb3b85bcc, 0x66e5b797, 0x0,
 ];
 
+// Implementation of memset function
 #[no_mangle]
 pub extern "C" fn memset(s: *mut u8, c: u8, n: usize) -> *mut u8 {
     let ptr = s as *const _ as *mut u8;
@@ -36,51 +39,55 @@ pub extern "C" fn memset(s: *mut u8, c: u8, n: usize) -> *mut u8 {
     slice as *const _ as *mut u8
 }
 
+// Main function
 #[link_section = ".text"]
 #[no_mangle]
 fn main() -> ! {
     let mut seed = 0x20c99db1;
     let mut plain: [u8; 132] = [0; 132];
 
+    // Call the decode function
     decode(&CODED, &mut plain, &mut seed);
 
     #[allow(clippy::empty_loop)]
     loop {}
 }
 
+// Codgen function
 #[link_section = ".text"]
 fn codgen(seed: &mut u32) -> u32 {
-    let mut n: i32 = ((*seed >> 25) & 0x1f) as i32;
+    let mut n: i32 = ((*seed >> 25) & 0x1f).try_into().unwrap(); // Getting the count // Getting the count
 
     while n >= 0 {
-        let x = *seed << 1;
-        let y = *seed / 128;
-        *seed = x ^ y;
-        n -= 1;
+        let x = *seed << 1; // Left shift
+        let y = *seed / 128; // Division
+        *seed = x ^ y; // Update seed
+        n -= 1; // Decrement count
     }
 
-    *seed ^ 0x49d38788
+    *seed ^ 0x49d38788 // Return modified seed
 }
 
+// Decode function
 #[link_section = ".text"]
 fn decode(wordarr: &[u32], bytearr: &mut [u8], seed: &mut u32) -> u32 {
-    let x = !codgen(seed);
+    let x = !codgen(seed); // Get negated codgen value
 
     if wordarr[0] == 0 {
-        bytearr[0] = 0;
-        x
+        bytearr[0] = 0; // Set first byte to zero if the first word is zero
+        x // Return x
     } else {
-        let y = decode(&wordarr[1..], &mut bytearr[1..], seed);
-        let m = (x ^ y).wrapping_sub(wordarr[0]);
-        bytearr[0] = (m >> 11) as u8;
+        let y = decode(&wordarr[1..], &mut bytearr[1..], seed); // Recursive call
+        let m = if x >= wordarr[0] {
+            (x ^ y) - wordarr[0] // Calculate m without underflow
+        } else {
+            0 // Prevent underflow
+        };
+        bytearr[0] = (m >> 11) as u8; // Store the result
 
-        #[allow(clippy::let_and_return)]
-        let r = x
-            .wrapping_add(y)
-            .wrapping_add(m)
-            .wrapping_add(!codgen(seed))
-            .wrapping_add(5);
+        // Compute r using updated logic
+        let r = x + y + m + (!codgen(seed)) + 5;
 
-        r
+        r // Return result
     }
 }
