@@ -13,6 +13,7 @@ SECTIONS
   .data :
   {
     KEEP(*(.data));  
+    KEEP(*(.data.output));
   }
   /DISCARD/ : {
    *(.MIPS.abiflags)

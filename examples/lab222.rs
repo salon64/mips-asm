@@ -9,8 +9,10 @@ fn panic(_info: &PanicInfo) -> ! {
 }
 
 #[used]
+#[link_section = ".output"]
+#[export_name = "output"]
+#[no_mangle]
 #[allow(dead_code)]
-#[link_section = ".data"]
 static mut PLAIN: [u8; 132] = [0; 132];
 
 #[link_section = ".data"]
@@ -40,9 +42,11 @@ pub extern "C" fn memset(s: *mut u8, c: u8, n: usize) -> *mut u8 {
 #[no_mangle]
 fn main() -> ! {
     let mut seed = 0x20c99db1;
-    let mut plain: [u8; 132] = [0; 132];
-
-    decode(&CODED, &mut plain, &mut seed);
+    // let mut plain: [u8; 132] = [0; 132];
+    
+    unsafe {
+        decode(&CODED, &mut PLAIN, &mut seed);
+    }
 
     #[allow(clippy::empty_loop)]
 
