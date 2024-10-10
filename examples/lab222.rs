@@ -8,6 +8,14 @@ fn panic(_info: &PanicInfo) -> ! {
     loop {}
 }
 
+// #[no_mangle]
+// pub extern "C" fn memset(s: *mut u8, c: u8, n: usize) -> *mut u8 {
+//     let ptr = s as *const _ as *mut u8;
+//     let slice = unsafe { core::slice::from_raw_parts_mut(ptr, n) };
+//     slice.fill(c);
+//     slice as *const _ as *mut u8
+// }
+
 #[no_mangle]
 #[export_name = "plain"]
 static mut PLAIN: [u8; 132] = [0; 132];
@@ -27,15 +35,9 @@ static CODED: [u32; 86] = [
     0x07209c2f, 0x95bdf638, 0x11ddbeef, 0xb3b85bcc, 0x66e5b797, 0x0,
 ];
 
-#[no_mangle]
-pub extern "C" fn memset(s: *mut u8, c: u8, n: usize) -> *mut u8 {
-    let ptr = s as *const _ as *mut u8;
-    let slice = unsafe { core::slice::from_raw_parts_mut(ptr, n) };
-    slice.fill(c);
-    slice as *const _ as *mut u8
-}
 
-#[link_section = ".text"]
+
+// #[link_section = ".text"]
 #[no_mangle]
 fn main() -> ! {
     let mut seed = 0x20c99db1;
@@ -53,7 +55,6 @@ fn main() -> ! {
     loop {}
 }
 
-#[link_section = ".text"]
 fn codgen(seed: &mut u32) -> u32 {
     let mut n: i32 = ((*seed >> 25) & 0x1f) as i32;
 
@@ -67,7 +68,6 @@ fn codgen(seed: &mut u32) -> u32 {
     *seed ^ 0x49d38788
 }
 
-#[link_section = ".text"]
 fn decode(wordarr: &[u32], bytearr: &mut [u8], seed: &mut u32) -> u32 {
     let x = !codgen(seed);
 
