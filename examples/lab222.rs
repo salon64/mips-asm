@@ -8,11 +8,8 @@ fn panic(_info: &PanicInfo) -> ! {
     loop {}
 }
 
-#[used]
-#[link_section = ".output"]
-#[export_name = "output"]
 #[no_mangle]
-#[allow(dead_code)]
+#[export_name = "plain"]
 static mut PLAIN: [u8; 132] = [0; 132];
 
 #[link_section = ".data"]
@@ -44,13 +41,15 @@ fn main() -> ! {
     let mut seed = 0x20c99db1;
     // let mut plain: [u8; 132] = [0; 132];
     
-    #[allow(static_mut_refs)]
+    
+    let plain;
+    #[allow(static_mut_refs)] // for compiler warning
     unsafe {
-        decode(&CODED, &mut PLAIN, &mut seed);
+        plain = &mut PLAIN;
     }
+    decode(&CODED, plain, &mut seed);
 
-    #[allow(clippy::empty_loop)]
-
+    #[allow(clippy::empty_loop)] // for compiler warning
     loop {}
 }
 
