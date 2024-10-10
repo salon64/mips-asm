@@ -37,7 +37,7 @@ static CODED: [u32; 86] = [
 
 
 
-// #[link_section = ".text"]
+#[link_section = ".text"]
 #[no_mangle]
 fn main() -> ! {
     let mut seed = 0x20c99db1;
