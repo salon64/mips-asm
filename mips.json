@@ -9,7 +9,7 @@
   "linker": "rust-lld",
   "linker-flavor": "gnu-lld",
   "llvm-target": "mips-unknown-none",
-  "max-atomic-width": 32,
+  "max-atomic-width": 0,
   "target-endian": "big",
   "metadata": {
     "description": "Bare MIPS",
