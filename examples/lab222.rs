@@ -44,6 +44,7 @@ fn main() -> ! {
     let mut seed = 0x20c99db1;
     // let mut plain: [u8; 132] = [0; 132];
     
+    #[allow(static_mut_refs)]
     unsafe {
         decode(&CODED, &mut PLAIN, &mut seed);
     }
